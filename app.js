@@ -1,10 +1,13 @@
 const express = require('express');
 const { send } = require('express/lib/response');
+const { handle500s } = require('./controllers/error-controllers');
 const { getTopics } = require('./controllers/news-controllers');
 
 const app = express();
 
 app.get('/api/topics', getTopics);
+
+app.use(handle500s);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "path not found" });

@@ -2,8 +2,10 @@ const request = require("supertest");
 const data = require("../db/data");
 const app = require("../app");
 const seed = require("../db/seeds/seed");
+const connection = require("../db/connection")
 
 beforeEach(() => seed(data));
+afterAll(() => connection.end());
 
 describe("news-app", () => {
   test("status: 404 - responds with path not found message for incorrect path", () => {

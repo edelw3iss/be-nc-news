@@ -14,4 +14,24 @@ describe("news-app", () => {
         expect(response.body.msg).toBe("path not found");
       });
   });
+  describe("/api/topics", () => {
+    describe("GET", () => {
+      test("status: 200 - responds with an array of topic objects", () => {
+        return request(app)
+          .get("/api/topics")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.topics).toHaveLength(3);
+            body.topics.forEach((topic) => {
+              expect(topic).toEqual(
+                expect.objectContaining({
+                  description: expect.any(String),
+                  slug: expect.any(String),
+                })
+              );
+            });
+          });
+      });
+    });
+  });
 });

@@ -59,12 +59,20 @@ describe("news-app", () => {
             );
           });
       });
-      test("status:400 - responds with err msg for invalid article_id", () => {
+      test("status:400 - responds with err msg for INVALID article_id", () => {
         return request(app)
           .get("/api/articles/not-an-id")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("bad request - invalid id");
+          });
+      });
+      test("status: 404 - responds with err msg for VALID but NON-EXISTENT article_id", () => {
+        return request(app)
+          .get("/api/articles/50")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article not found");
           });
       });
     });

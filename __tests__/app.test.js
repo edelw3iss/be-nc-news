@@ -39,7 +39,7 @@ describe("news-app", () => {
   });
   describe("/api/articles/:article_id", () => {
     describe("GET", () => {
-      test.skip("status: 200 - responds with a specified article object", () => {
+      test("status: 200 - responds with a specified article object", () => {
         return request(app)
           .get("/api/articles/1")
           .expect(200)
@@ -51,9 +51,7 @@ describe("news-app", () => {
                 topic: "mitch",
                 author: "butter_bridge",
                 body: "I find this existence challenging",
-                created_at: convertTimestampToDate({
-                  created_at: 1594329060000,
-                }),
+                created_at: expect.any(String),
                 votes: 100,
               })
             );

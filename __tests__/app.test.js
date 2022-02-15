@@ -1,8 +1,9 @@
 const request = require("supertest");
-const data = require("../db/data");
+const data = require("../db/data/test-data");
 const app = require("../app");
 const seed = require("../db/seeds/seed");
-const connection = require("../db/connection")
+const connection = require("../db/connection");
+const { convertTimestampToDate } = require("../db/helpers/utils");
 
 beforeEach(() => seed(data));
 afterAll(() => connection.end());
@@ -32,6 +33,42 @@ describe("news-app", () => {
                 })
               );
             });
+          });
+      });
+    });
+  });
+  describe("/api/articles/:article_id", () => {
+    describe("GET", () => {
+      test("status: 200 - responds with a specified article object", () => {
+        return request(app)
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.article).toEqual({
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              created_at: expect.any(String),
+              votes: 100,
+            });
+          });
+      });
+      test("status:400 - responds with err msg for INVALID article_id", () => {
+        return request(app)
+          .get("/api/articles/not-an-id")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid id");
+          });
+      });
+      test("status: 404 - responds with err msg for VALID but NON-EXISTENT article_id", () => {
+        return request(app)
+          .get("/api/articles/50")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article not found");
           });
       });
     });

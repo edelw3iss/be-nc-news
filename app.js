@@ -1,12 +1,19 @@
-const express = require('express');
-const { send } = require('express/lib/response');
-const { handle500s } = require('./controllers/error-controllers');
-const { getTopics } = require('./controllers/news-controllers');
+const express = require("express");
+const {
+  handle500s,
+  handlePsqlErrors,
+  handleCustomErrors,
+} = require("./controllers/error-controllers");
+const { getArticlebyId } = require("./controllers/articles-controller");
+const { getTopics } = require("./controllers/topics-controller");
 
 const app = express();
 
-app.get('/api/topics', getTopics);
+app.get("/api/topics", getTopics);
+app.get("/api/articles/:article_id", getArticlebyId);
 
+app.use(handlePsqlErrors);
+app.use(handleCustomErrors);
 app.use(handle500s);
 
 app.all("/*", (req, res) => {

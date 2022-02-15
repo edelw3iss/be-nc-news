@@ -91,6 +91,26 @@ describe("news-app", () => {
             });
           });
       });
+      test("status: 201 - responds with a specified article object with updated votes, when negative", () => {
+        const votesUpdate = { inc_votes: -100 };
+        return request(app)
+          .patch("/api/articles/1")
+          .send(votesUpdate)
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.article).toEqual(
+              expect.objectContaining({
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 0,
+              })
+            );
+          });
+      });
     });
   });
 });

@@ -44,17 +44,15 @@ describe("news-app", () => {
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            expect(body.article).toEqual(
-              expect.objectContaining({
-                article_id: 1,
-                title: "Living in the shadow of a great man",
-                topic: "mitch",
-                author: "butter_bridge",
-                body: "I find this existence challenging",
-                created_at: expect.any(String),
-                votes: 100,
-              })
-            );
+            expect(body.article).toEqual({
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              created_at: expect.any(String),
+              votes: 100,
+            });
           });
       });
       test("status:400 - responds with err msg for INVALID article_id", () => {

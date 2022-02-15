@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.fetchArticle = (article_id) => {
+exports.fetchArticleById = (article_id) => {
   return db
     .query(
       `SELECT * FROM articles

@@ -17,6 +17,7 @@ describe("news-app", () => {
         expect(response.body.msg).toBe("path not found");
       });
   });
+  // ----- /api/topics -----
   describe("/api/topics", () => {
     describe("GET", () => {
       test("status: 200 - responds with an array of topic objects", () => {
@@ -37,6 +38,7 @@ describe("news-app", () => {
       });
     });
   });
+  //----- /api/articles/:article_id -----
   describe("/api/articles/:article_id", () => {
     describe("GET", () => {
       test("status: 200 - responds with a specified article object", () => {
@@ -60,7 +62,6 @@ describe("news-app", () => {
           .get("/api/articles/not-an-id")
           .expect(400)
           .then(({ body }) => {
-            //invalid id
             expect(body.msg).toBe("bad request - invalid input");
           });
       });
@@ -123,7 +124,7 @@ describe("news-app", () => {
           });
       });
       test("status:400 - responds with err msg for required fields missing", () => {
-        const votesUpdate = { };
+        const votesUpdate = {};
         return request(app)
           .patch("/api/articles/1")
           .send(votesUpdate)
@@ -152,6 +153,24 @@ describe("news-app", () => {
             expect(body.msg).toBe("article not found");
           });
       });
+    });
+  });
+  // ----- /api/users -----
+  describe.only("/api/users", () => {
+    test("status: 200 - responds with an array of objects containing users", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.users).toHaveLength(4);
+          body.users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+              })
+            );
+          });
+        });
     });
   });
 });

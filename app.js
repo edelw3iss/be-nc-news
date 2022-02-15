@@ -6,14 +6,18 @@ const {
 } = require("./controllers/error-controllers");
 const { getArticlebyId, changeArticleVotesById } = require("./controllers/articles-controller");
 const { getTopics } = require("./controllers/topics-controller");
+const { getUsers } = require("./controllers/users-controller");
 
 const app = express();
 
 app.use(express.json());
 
 app.get("/api/topics", getTopics);
+
 app.get("/api/articles/:article_id", getArticlebyId);
 app.patch("/api/articles/:article_id", changeArticleVotesById);
+
+app.get("/api/users", getUsers);
 
 app.use(handlePsqlErrors);
 app.use(handleCustomErrors);

@@ -14,5 +14,5 @@ exports.changeArticleVotesById = (req, res, next) => {
   alterArticleVotesById(articleId, votesToAdd).then((article) => {
     res.status(201).send({ article });
   })
-    .catch(next);
+    .catch(next)
 }

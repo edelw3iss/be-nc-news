@@ -269,6 +269,14 @@ describe("news-app", () => {
             expect(body.msg).toBe("article not found");
         })
       });
+      test("status:400 - responds with err msg for INVALID article_id", () => {
+        return request(app)
+          .get("/api/articles/not-an-id/comments")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid input");
+          });
+      });
     });
     
   });

@@ -40,7 +40,7 @@ describe("news-app", () => {
   });
   //----- /api/articles/:article_id -----
   describe("/api/articles/:article_id", () => {
-    describe.only("GET", () => {
+    describe("GET", () => {
       test("status: 200 - responds with a specified article object", () => {
         return request(app)
           .get("/api/articles/1")
@@ -232,5 +232,29 @@ describe("news-app", () => {
           });
       });
     });
+  });
+  // ----- /api/articles/:article_id/comments -----
+  describe.only('/api/articles/:article_id/comments', () => {
+    describe('GET', () => {
+      test('status:200, responds with an array of comments for specified article, if article exists', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).toHaveLength(11);
+            body.comments.forEach((comment) => {
+              expect(comment).toEqual(expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String)
+              }))
+            })
+          })
+        
+      });
+    });
+    
   });
 });

@@ -40,21 +40,44 @@ describe("news-app", () => {
   });
   //----- /api/articles/:article_id -----
   describe("/api/articles/:article_id", () => {
-    describe("GET", () => {
+    describe.only("GET", () => {
       test("status: 200 - responds with a specified article object", () => {
         return request(app)
           .get("/api/articles/1")
           .expect(200)
           .then(({ body }) => {
-            expect(body.article).toEqual({
-              article_id: 1,
-              title: "Living in the shadow of a great man",
-              topic: "mitch",
-              author: "butter_bridge",
-              body: "I find this existence challenging",
-              created_at: expect.any(String),
-              votes: 100,
-            });
+            expect(body.article).toEqual(
+              expect.objectContaining({
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: expect.any(String),
+                votes: 100,
+              })
+            );
+          });
+      });
+      // ----- ticket 5 -----
+      test("status: 200 - response contains comment_count when comments exist", () => {
+        return request(app)
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.article).toEqual(
+              expect.objectContaining({ comment_count: 11 })
+            );
+          });
+      });
+      test("status: 200 - response contains comment_count of 0 when no comments exist", () => {
+        return request(app)
+          .get("/api/articles/2")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.article).toEqual(
+              expect.objectContaining({ comment_count: 0 })
+            );
           });
       });
       test("status:400 - responds with err msg for INVALID article_id", () => {
@@ -157,7 +180,7 @@ describe("news-app", () => {
   });
   // ----- /api/users -----
   describe("/api/users", () => {
-    describe('GET', () => {
+    describe("GET", () => {
       test("status: 200 - responds with an array of objects containing users", () => {
         return request(app)
           .get("/api/users")
@@ -198,16 +221,15 @@ describe("news-app", () => {
             });
           });
       });
-      test('responds with an array sorted by descending date order', () => {
+      test("responds with an array sorted by descending date order", () => {
         return request(app)
           .get("/api/articles")
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).toBeSortedBy("created_at", {
               descending: true,
-            })
-          })
-        
+            });
+          });
       });
     });
   });

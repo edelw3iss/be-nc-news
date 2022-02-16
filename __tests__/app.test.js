@@ -236,7 +236,7 @@ describe("news-app", () => {
   // ----- /api/articles/:article_id/comments -----
   describe.only('/api/articles/:article_id/comments', () => {
     describe('GET', () => {
-      test('status:200, responds with an array of comments for specified article, if article exists', () => {
+      test('status:200, responds with an array of comments for specified article, if comments exist', () => {
         return request(app)
           .get('/api/articles/1/comments')
           .expect(200)
@@ -251,8 +251,23 @@ describe("news-app", () => {
                 body: expect.any(String)
               }))
             })
-          })
-        
+          }) 
+      });
+      test('status:200, responds with an empty array of comments for specified article if no comments exist', () => {
+        return request(app)
+          .get('/api/articles/2/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).toEqual([]);
+        })
+      });
+      test('status:404 for a VALID but NON-EXISTENT article_id', () => {
+        return request(app)
+        .get('/api/articles/9999/comments')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article not found");
+        })
       });
     });
     

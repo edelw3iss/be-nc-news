@@ -43,7 +43,7 @@ exports.alterArticleVotesById = (articleId, votesToAdd) => {
 };
 
 exports.fetchArticles = () => {
-  return db.query(`SELECT author, title, article_id, topic, created_at, votes FROM articles;`).then(({ rows }) => {
+  return db.query(`SELECT author, title, article_id, topic, created_at, votes FROM articles ORDER BY created_at DESC;`).then(({ rows }) => {
     return rows;
   });
 };

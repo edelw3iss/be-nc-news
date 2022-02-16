@@ -198,6 +198,17 @@ describe("news-app", () => {
             });
           });
       });
+      test('responds with an array sorted by descending date order', () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).toBeSortedBy("created_at", {
+              descending: true,
+            })
+          })
+        
+      });
     });
   });
 });

@@ -156,21 +156,59 @@ describe("news-app", () => {
     });
   });
   // ----- /api/users -----
-  describe.only("/api/users", () => {
-    test("status: 200 - responds with an array of objects containing users", () => {
-      return request(app)
-        .get("/api/users")
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.users).toHaveLength(4);
-          body.users.forEach((user) => {
-            expect(user).toEqual(
-              expect.objectContaining({
-                username: expect.any(String),
-              })
-            );
+  describe("/api/users", () => {
+    describe('GET', () => {
+      test("status: 200 - responds with an array of objects containing users", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.users).toHaveLength(4);
+            body.users.forEach((user) => {
+              expect(user).toEqual(
+                expect.objectContaining({
+                  username: expect.any(String),
+                })
+              );
+            });
           });
-        });
+      });
+    });
+  });
+  // ----- /api/articles -----
+  describe("/api/articles", () => {
+    describe("GET", () => {
+      test("status: 200 - responds with an array of articles objects", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).toHaveLength(12);
+            body.articles.forEach((article) => {
+              expect(article).toEqual(
+                expect.objectContaining({
+                  article_id: expect.any(Number),
+                  title: expect.any(String),
+                  topic: expect.any(String),
+                  author: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: expect.any(Number),
+                })
+              );
+            });
+          });
+      });
+      test('responds with an array sorted by descending date order', () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).toBeSortedBy("created_at", {
+              descending: true,
+            })
+          })
+        
+      });
     });
   });
 });

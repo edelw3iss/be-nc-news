@@ -4,7 +4,7 @@ const {
   handlePsqlErrors,
   handleCustomErrors,
 } = require("./controllers/error-controllers");
-const { getArticlebyId, changeArticleVotesById } = require("./controllers/articles-controller");
+const { getArticlebyId, changeArticleVotesById, getArticles } = require("./controllers/articles-controller");
 const { getTopics } = require("./controllers/topics-controller");
 const { getUsers } = require("./controllers/users-controller");
 
@@ -16,6 +16,7 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticlebyId);
 app.patch("/api/articles/:article_id", changeArticleVotesById);
+app.get("/api/articles", getArticles);
 
 app.get("/api/users", getUsers);
 

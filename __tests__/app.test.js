@@ -422,4 +422,21 @@ describe("news-app", () => {
       });
     });
   });
+  // ----- /api/comments/:comment_id -----
+  describe("/api/comments/:comment_id", () => {
+    describe("DELETE", () => {
+      test("status: 204, deletes specified comment", () => {
+        return request(app)
+          .delete("/api/comments/1")
+          .expect(204)
+          .then(() => {
+            return connection.query(`
+          SELECT * FROM comments;`);
+          })
+          .then(({ rows }) => {
+            expect(rows).toHaveLength(17);
+          });
+      });
+    });
+  });
 });

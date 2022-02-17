@@ -42,3 +42,11 @@ exports.addCommentByArticleId = (articleId, commentToAdd) => {
       return rows[0];
     });
 };
+
+
+exports.removeCommentByCommentId = (commentId) => {
+  return db.query(`
+  DELETE FROM comments
+  WHERE comment_id = $1;
+  `, [commentId]);
+}

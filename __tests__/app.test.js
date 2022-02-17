@@ -40,7 +40,7 @@ describe("news-app", () => {
   });
   //----- /api/articles/:article_id -----
   describe("/api/articles/:article_id", () => {
-    describe.only("GET", () => {
+    describe("GET", () => {
       test("status: 200 - responds with a specified article object", () => {
         return request(app)
           .get("/api/articles/1")
@@ -232,5 +232,52 @@ describe("news-app", () => {
           });
       });
     });
+  });
+  // ----- /api/articles/:article_id/comments -----
+  describe('/api/articles/:article_id/comments', () => {
+    describe('GET', () => {
+      test('status:200, responds with an array of comments for specified article, if comments exist', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).toHaveLength(11);
+            body.comments.forEach((comment) => {
+              expect(comment).toEqual(expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String)
+              }))
+            })
+          }) 
+      });
+      test('status:200, responds with an empty array of comments for specified article if no comments exist', () => {
+        return request(app)
+          .get('/api/articles/2/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments).toEqual([]);
+        })
+      });
+      test('status:404 for a VALID but NON-EXISTENT article_id', () => {
+        return request(app)
+        .get('/api/articles/9999/comments')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article not found");
+        })
+      });
+      test("status:400 - responds with err msg for INVALID article_id", () => {
+        return request(app)
+          .get("/api/articles/not-an-id/comments")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid input");
+          });
+      });
+    });
+    
   });
 });

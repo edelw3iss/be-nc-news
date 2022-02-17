@@ -316,6 +316,19 @@ describe("news-app", () => {
             );
           });
       });
+      test("status: 404 - responds with err msg for VALID but NON-EXISTENT article_id", () => {
+        const newComment = {
+          username: "butter_bridge",
+          body: "This article is amazing!",
+        };
+        return request(app)
+          .post("/api/articles/50/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("article not found");
+          });
+      });
     });
   });
 });

@@ -1,4 +1,4 @@
-const { fetchCommentsByArticleId, checkArticleExists, addCommentByArticleId, removeCommentByCommentId } = require("../models/comments-model");
+const { fetchCommentsByArticleId, checkArticleExists, addCommentByArticleId, removeCommentByCommentId, checkItemExists } = require("../models/comments-model");
 
 
 exports.getCommentsByArticleId = (req, res, next) => {
@@ -22,7 +22,9 @@ exports.postCommentByArticleId = (req, res, next) => {
 
 exports.deleteCommentByCommentId = (req, res, next) => {
   const { comment_id: commentId } = req.params;
-  removeCommentByCommentId(commentId)
+  const table = 'comments'
+  const column = 'comment_id'
+  Promise.all([removeCommentByCommentId(commentId), checkItemExists(table, column, commentId)])
     .then(() => {
       res.status(204).send();
     })

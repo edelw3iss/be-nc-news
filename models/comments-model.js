@@ -50,3 +50,13 @@ exports.removeCommentByCommentId = (commentId) => {
   WHERE comment_id = $1;
   `, [commentId]);
 }
+
+exports.checkItemExists = (table, column, item) => {
+  return db
+    .query(`SELECT * FROM ${table} WHERE ${column} = $1;`, [item])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: `${column} not found` });
+      }
+    });
+};

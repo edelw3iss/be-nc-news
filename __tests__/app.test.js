@@ -423,7 +423,7 @@ describe("news-app", () => {
     });
   });
   // ----- /api/comments/:comment_id -----
-  describe.only("/api/comments/:comment_id", () => {
+  describe("/api/comments/:comment_id", () => {
     describe("DELETE", () => {
       test("status: 204, deletes specified comment", () => {
         return request(app)
@@ -439,6 +439,14 @@ describe("news-app", () => {
               expect(row.comment_id).not.toBe(1)
             }) 
           });
+      });
+      test('status: 404 - responds with err msg for non-existent comment_id', () => {
+        return request(app)
+          .delete("/api/comments/50")
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe("comment_id not found")
+        })
       });
     });
   });

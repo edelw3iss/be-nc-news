@@ -46,6 +46,10 @@ exports.alterArticleVotesById = (articleId, votesToAdd) => {
 };
 
 exports.fetchArticles = (sortBy="created_at", orderBy="DESC") => {
+  const validSortBys = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
+  if (!validSortBys.includes(sortBy)) {
+    return Promise.reject({status: 400, msg: "bad request - invalid query"})
+  }
   return db
     .query(
       `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.comment_id)::int AS comment_count 

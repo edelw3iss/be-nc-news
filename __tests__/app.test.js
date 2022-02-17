@@ -244,21 +244,29 @@ describe("news-app", () => {
             });
           });
       });
-      test('status: 200, accepts sort-by query, defaulting to descending order', () => {
+      test("status: 200, accepts sort-by query, defaulting to descending order", () => {
         return request(app)
           .get("/api/articles?sort_by=title")
           .expect(200)
           .then(({ body }) => {
-          expect(body.articles).toBeSortedBy("title", {descending: true})
-        })
+            expect(body.articles).toBeSortedBy("title", { descending: true });
+          });
       });
-      test('status: 200, accepts order-by query', () => {
+      test("status: 200, accepts order-by query", () => {
         return request(app)
           .get("/api/articles?sort_by=topic&order_by=ASC")
           .expect(200)
           .then(({ body }) => {
-          expect(body.articles).toBeSortedBy("topic")
-        })
+            expect(body.articles).toBeSortedBy("topic");
+          });
+      });
+      test("status:400, for invalid sort-by query", () => {
+        return request(app)
+          .get("/api/articles?sort_by=invalid-query")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid query");
+          });
       });
     });
   });

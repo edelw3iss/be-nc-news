@@ -24,7 +24,6 @@ exports.checkArticleExists = (articleId) => {
 
 exports.addCommentByArticleId = (articleId, commentToAdd) => {
   const { username, body } = commentToAdd;
-  const date = new Date();
   if (!username || !body) {
     return Promise.reject({ status: 400, msg: "bad request - invalid input" });
   }
@@ -32,15 +31,14 @@ exports.addCommentByArticleId = (articleId, commentToAdd) => {
       .query(
         `
     INSERT INTO comments
-    (votes, created_at, author, article_id, body)
+    (author, article_id, body)
     VALUES
-    ($1, $2, $3, $4, $5)
+    ($1, $2, $3)
     RETURNING *;
     `,
-        [0, date, username, articleId, body]
+        [username, articleId, body]
       )
     .then(({ rows }) => {
-      console.log(rows, "response in model");
       return rows[0];
     });
 };

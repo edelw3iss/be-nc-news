@@ -234,7 +234,7 @@ describe("news-app", () => {
     });
   });
   // ----- /api/articles/:article_id/comments -----
-  describe.only('/api/articles/:article_id/comments', () => {
+  describe('/api/articles/:article_id/comments', () => {
     describe('GET', () => {
       test('status:200, responds with an array of comments for specified article, if comments exist', () => {
         return request(app)

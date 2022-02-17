@@ -45,14 +45,14 @@ exports.alterArticleVotesById = (articleId, votesToAdd) => {
     });
 };
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (sortBy="created_at", orderBy="DESC") => {
   return db
     .query(
       `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.comment_id)::int AS comment_count 
       FROM articles 
       LEFT JOIN comments ON comments.article_id = articles.article_id
       GROUP BY articles.article_id
-      ORDER BY created_at DESC;`
+      ORDER BY ${sortBy} ${orderBy};`
     )
     .then(({ rows }) => {
       return rows;

@@ -18,7 +18,8 @@ exports.changeArticleVotesById = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-  fetchArticles().then((articles) => {
+  const { sort_by: sortBy, order_by: orderBy } = req.query;
+  fetchArticles(sortBy, orderBy).then((articles) => {
     res.status(200).send({ articles });
   })
     .catch(next);

@@ -244,6 +244,22 @@ describe("news-app", () => {
             });
           });
       });
+      test('status: 200, accepts sort-by query, defaulting to descending order', () => {
+        return request(app)
+          .get("/api/articles?sort_by=title")
+          .expect(200)
+          .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("title", {descending: true})
+        })
+      });
+      test('status: 200, accepts order-by query', () => {
+        return request(app)
+          .get("/api/articles?sort_by=topic&order_by=ASC")
+          .expect(200)
+          .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("topic")
+        })
+      });
     });
   });
   // ----- /api/articles/:article_id/comments -----

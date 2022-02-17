@@ -260,9 +260,17 @@ describe("news-app", () => {
             expect(body.articles).toBeSortedBy("topic");
           });
       });
-      test("status:400, for invalid sort-by query", () => {
+      test("status: 400, for invalid sort-by query", () => {
         return request(app)
           .get("/api/articles?sort_by=invalid-query")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid query");
+          });
+      });
+      test("status: 400, for invalid order-by query", () => {
+        return request(app)
+          .get("/api/articles?sort_by=author&order_by=invalid")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("bad request - invalid query");

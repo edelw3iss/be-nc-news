@@ -47,7 +47,8 @@ exports.alterArticleVotesById = (articleId, votesToAdd) => {
 
 exports.fetchArticles = (sortBy="created_at", orderBy="DESC") => {
   const validSortBys = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
-  if (!validSortBys.includes(sortBy)) {
+  const validOrderBys = ['ASC', 'DESC']
+  if (!validSortBys.includes(sortBy) || !validOrderBys.includes(orderBy)) {
     return Promise.reject({status: 400, msg: "bad request - invalid query"})
   }
   return db

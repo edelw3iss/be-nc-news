@@ -423,7 +423,7 @@ describe("news-app", () => {
     });
   });
   // ----- /api/comments/:comment_id -----
-  describe("/api/comments/:comment_id", () => {
+  describe.only("/api/comments/:comment_id", () => {
     describe("DELETE", () => {
       test("status: 204, deletes specified comment", () => {
         return request(app)
@@ -435,6 +435,9 @@ describe("news-app", () => {
           })
           .then(({ rows }) => {
             expect(rows).toHaveLength(17);
+            rows.forEach((row) => {
+              expect(row.comment_id).not.toBe(1)
+            }) 
           });
       });
     });

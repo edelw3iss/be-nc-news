@@ -45,21 +45,34 @@ exports.alterArticleVotesById = (articleId, votesToAdd) => {
     });
 };
 
-exports.fetchArticles = (sortBy="created_at", orderBy="DESC") => {
-  const validSortBys = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
-  const validOrderBys = ['ASC', 'DESC']
+exports.fetchArticles = (sortBy = "created_at", orderBy = "DESC", topic) => {
+  const validSortBys = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const validOrderBys = ["ASC", "DESC"];
   if (!validSortBys.includes(sortBy) || !validOrderBys.includes(orderBy)) {
-    return Promise.reject({status: 400, msg: "bad request - invalid query"})
+    return Promise.reject({ status: 400, msg: "bad request - invalid query" });
   }
-  return db
-    .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.comment_id)::int AS comment_count 
-      FROM articles 
-      LEFT JOIN comments ON comments.article_id = articles.article_id
-      GROUP BY articles.article_id
-      ORDER BY ${sortBy} ${orderBy};`
-    )
+  
+  const queryValues = [];
+  let queryStr = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, COUNT(comments.comment_id)::int AS comment_count 
+    FROM articles 
+    LEFT JOIN comments ON comments.article_id = articles.article_id `;
+  if (topic) {
+    queryStr += `WHERE topic = $1 `;
+    queryValues.push(topic);
+  }
+  queryStr += `GROUP BY articles.article_id
+    ORDER BY ${sortBy} ${orderBy};`;
+  
+  return db.query(queryStr, queryValues)
     .then(({ rows }) => {
-      return rows;
-    });
+    return rows;
+  });
 };

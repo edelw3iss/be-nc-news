@@ -260,6 +260,21 @@ describe("news-app", () => {
             expect(body.articles).toBeSortedBy("topic");
           });
       });
+      test("status: 200, accepts topic query", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).toHaveLength(11);
+            body.articles.forEach((article) => {
+              expect(article).toEqual(
+                expect.objectContaining({
+                  topic: "mitch",
+                })
+              );
+            });
+          });
+      });
       test("status: 400, for invalid sort-by query", () => {
         return request(app)
           .get("/api/articles?sort_by=invalid-query")

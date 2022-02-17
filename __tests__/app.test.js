@@ -231,10 +231,23 @@ describe("news-app", () => {
             });
           });
       });
+      test("status: 200 - all responses contains comment_count", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.articles).toHaveLength(12)
+            body.articles.forEach((article) => {
+              expect(article).toEqual(
+                expect.objectContaining({ comment_count: expect.any(Number) })
+              )
+            });
+          });
+      });
     });
   });
   // ----- /api/articles/:article_id/comments -----
-  describe.only('/api/articles/:article_id/comments', () => {
+  describe('/api/articles/:article_id/comments', () => {
     describe('GET', () => {
       test('status:200, responds with an array of comments for specified article, if comments exist', () => {
         return request(app)

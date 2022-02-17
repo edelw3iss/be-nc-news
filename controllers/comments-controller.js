@@ -3,7 +3,9 @@ const { fetchCommentsByArticleId, checkArticleExists, addCommentByArticleId, rem
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id: articleId } = req.params;
-  Promise.all([fetchCommentsByArticleId(articleId), checkArticleExists(articleId)])
+  const table = 'articles';
+  const column = 'article_id'
+  Promise.all([fetchCommentsByArticleId(articleId), checkItemExists(table, column, articleId)])
     .then(([comments]) => {
     res.status(200).send({ comments });
   })

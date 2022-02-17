@@ -336,7 +336,7 @@ describe("news-app", () => {
           .get("/api/articles/9999/comments")
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).toBe("article not found");
+            expect(body.msg).toBe("article_id not found");
           });
       });
       test("status:400 - responds with err msg for INVALID article_id", () => {

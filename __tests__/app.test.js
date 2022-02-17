@@ -326,7 +326,43 @@ describe("news-app", () => {
           .send(newComment)
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).toBe("article not found");
+            expect(body.msg).toBe("user input requirements do not exist");
+          });
+      });
+      test("status: 404 - responds with err msg if user does NOT exist", () => {
+        const newComment = {
+          username: "does_not_exist",
+          body: "This article is amazing!",
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("user input requirements do not exist");
+          });
+      });
+      test("status:400 - responds with err msg for empty comment", () => {
+        const newComment = {
+          username: "butter_bridge",
+          body: "",
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid input");
+          });
+      });
+      test("status:400 - responds with err msg for required fields missing", () => {
+        const newComment = {};
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("bad request - invalid input");
           });
       });
     });

@@ -291,6 +291,14 @@ describe("news-app", () => {
             expect(body.msg).toBe("bad request - invalid query");
           });
       });
+      test("status: 404, for invalid topic query", () => {
+        return request(app)
+          .get("/api/articles?topic=not_a_topic")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("topic not found");
+          });
+      });
     });
   });
   // ----- /api/articles/:article_id/comments -----

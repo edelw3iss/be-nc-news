@@ -73,6 +73,9 @@ exports.fetchArticles = (sortBy = "created_at", orderBy = "DESC", topic) => {
   
   return db.query(queryStr, queryValues)
     .then(({ rows }) => {
+      if (!rows.length) {
+      return Promise.reject({status: 404, msg: "topic not found"})
+    }
     return rows;
   });
 };

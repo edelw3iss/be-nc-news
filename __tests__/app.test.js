@@ -236,51 +236,53 @@ describe("news-app", () => {
           .get("/api/articles")
           .expect(200)
           .then(({ body }) => {
-            expect(body.articles).toHaveLength(12)
+            expect(body.articles).toHaveLength(12);
             body.articles.forEach((article) => {
               expect(article).toEqual(
                 expect.objectContaining({ comment_count: expect.any(Number) })
-              )
+              );
             });
           });
       });
     });
   });
   // ----- /api/articles/:article_id/comments -----
-  describe('/api/articles/:article_id/comments', () => {
-    describe('GET', () => {
-      test('status:200, responds with an array of comments for specified article, if comments exist', () => {
+  describe("/api/articles/:article_id/comments", () => {
+    describe("GET", () => {
+      test("status:200, responds with an array of comments for specified article, if comments exist", () => {
         return request(app)
-          .get('/api/articles/1/comments')
+          .get("/api/articles/1/comments")
           .expect(200)
           .then(({ body }) => {
             expect(body.comments).toHaveLength(11);
             body.comments.forEach((comment) => {
-              expect(comment).toEqual(expect.objectContaining({
-                comment_id: expect.any(Number),
-                votes: expect.any(Number),
-                created_at: expect.any(String),
-                author: expect.any(String),
-                body: expect.any(String)
-              }))
-            })
-          }) 
+              expect(comment).toEqual(
+                expect.objectContaining({
+                  comment_id: expect.any(Number),
+                  votes: expect.any(Number),
+                  created_at: expect.any(String),
+                  author: expect.any(String),
+                  body: expect.any(String),
+                })
+              );
+            });
+          });
       });
-      test('status:200, responds with an empty array of comments for specified article if no comments exist', () => {
+      test("status:200, responds with an empty array of comments for specified article if no comments exist", () => {
         return request(app)
-          .get('/api/articles/2/comments')
+          .get("/api/articles/2/comments")
           .expect(200)
           .then(({ body }) => {
             expect(body.comments).toEqual([]);
-        })
+          });
       });
-      test('status:404 for a VALID but NON-EXISTENT article_id', () => {
+      test("status:404 for a VALID but NON-EXISTENT article_id", () => {
         return request(app)
-        .get('/api/articles/9999/comments')
+          .get("/api/articles/9999/comments")
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("article not found");
-        })
+          });
       });
       test("status:400 - responds with err msg for INVALID article_id", () => {
         return request(app)
@@ -291,6 +293,29 @@ describe("news-app", () => {
           });
       });
     });
-    
+    describe("POST", () => {
+      test("status: 201 - responds with the posted comment", () => {
+        const newComment = {
+          username: "butter_bridge",
+          body: "This article is amazing!",
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(newComment)
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.comment).toEqual(
+              expect.objectContaining({
+                comment_id: 19,
+                votes: 0,
+                created_at: expect.any(String),
+                author: "butter_bridge",
+                body: "This article is amazing!",
+                article_id: 2,
+              })
+            );
+          });
+      });
+    });
   });
 });

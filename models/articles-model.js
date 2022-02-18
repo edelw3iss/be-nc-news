@@ -45,7 +45,7 @@ exports.alterArticleVotesById = (articleId, votesToAdd) => {
     });
 };
 
-exports.fetchArticles = (sortBy = "created_at", orderBy = "DESC", topic) => {
+exports.fetchArticles = (sortBy = "created_at", order = "DESC", topic) => {
   const validSortBys = [
     "author",
     "title",
@@ -55,8 +55,8 @@ exports.fetchArticles = (sortBy = "created_at", orderBy = "DESC", topic) => {
     "votes",
     "comment_count",
   ];
-  const validOrderBys = ["ASC", "DESC"];
-  if (!validSortBys.includes(sortBy) || !validOrderBys.includes(orderBy)) {
+  const validOrderBys = ["ASC", "DESC", "asc", "desc"];
+  if (!validSortBys.includes(sortBy) || !validOrderBys.includes(order)) {
     return Promise.reject({ status: 400, msg: "bad request - invalid query" });
   }
   
@@ -69,7 +69,7 @@ exports.fetchArticles = (sortBy = "created_at", orderBy = "DESC", topic) => {
     queryValues.push(topic);
   }
   queryStr += `GROUP BY articles.article_id
-    ORDER BY ${sortBy} ${orderBy};`;
+    ORDER BY ${sortBy} ${order};`;
   
   return db.query(queryStr, queryValues)
     .then(({ rows }) => {

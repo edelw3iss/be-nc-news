@@ -336,7 +336,7 @@ describe("news-app", () => {
           .get("/api/articles/9999/comments")
           .expect(404)
           .then(({ body }) => {
-            expect(body.msg).toBe("article not found");
+            expect(body.msg).toBe("article_id not found");
           });
       });
       test("status:400 - responds with err msg for INVALID article_id", () => {
@@ -419,6 +419,34 @@ describe("news-app", () => {
           .then(({ body }) => {
             expect(body.msg).toBe("bad request - invalid input");
           });
+      });
+    });
+  });
+  // ----- /api/comments/:comment_id -----
+  describe("/api/comments/:comment_id", () => {
+    describe("DELETE", () => {
+      test("status: 204, deletes specified comment", () => {
+        return request(app)
+          .delete("/api/comments/1")
+          .expect(204)
+          .then(() => {
+            return connection.query(`
+          SELECT * FROM comments;`);
+          })
+          .then(({ rows }) => {
+            expect(rows).toHaveLength(17);
+            rows.forEach((row) => {
+              expect(row.comment_id).not.toBe(1)
+            }) 
+          });
+      });
+      test('status: 404 - responds with err msg for non-existent comment_id', () => {
+        return request(app)
+          .delete("/api/comments/50")
+          .expect(404)
+          .then(({body}) => {
+            expect(body.msg).toBe("comment_id not found")
+        })
       });
     });
   });

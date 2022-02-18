@@ -254,7 +254,7 @@ describe("news-app", () => {
       });
       test("status: 200, accepts order-by query", () => {
         return request(app)
-          .get("/api/articles?sort_by=topic&order_by=ASC")
+          .get("/api/articles?sort_by=topic&order=asc")
           .expect(200)
           .then(({ body }) => {
             expect(body.articles).toBeSortedBy("topic");
@@ -285,7 +285,7 @@ describe("news-app", () => {
       });
       test("status: 400, for invalid order-by query", () => {
         return request(app)
-          .get("/api/articles?sort_by=author&order_by=invalid")
+          .get("/api/articles?sort_by=author&order=invalid")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("bad request - invalid query");

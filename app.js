@@ -8,10 +8,13 @@ const { getArticlebyId, changeArticleVotesById, getArticles } = require("./contr
 const { getTopics } = require("./controllers/topics-controller");
 const { getUsers } = require("./controllers/users-controller");
 const { getCommentsByArticleId, postCommentByArticleId, deleteCommentByCommentId } = require("./controllers/comments-controller");
+const { getEndpoints } = require("./controllers/endpoints-controller");
 
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", getEndpoints);
 
 app.get("/api/topics", getTopics);
 

@@ -3,7 +3,7 @@ const data = require("../db/data/test-data");
 const app = require("../app");
 const seed = require("../db/seeds/seed");
 const connection = require("../db/connection");
-const { convertTimestampToDate } = require("../db/helpers/utils");
+const endpoints = require('../endpoints.json')
 
 beforeEach(() => seed(data));
 afterAll(() => connection.end());
@@ -436,17 +436,30 @@ describe("news-app", () => {
           .then(({ rows }) => {
             expect(rows).toHaveLength(17);
             rows.forEach((row) => {
-              expect(row.comment_id).not.toBe(1)
-            }) 
+              expect(row.comment_id).not.toBe(1);
+            });
           });
       });
-      test('status: 404 - responds with err msg for non-existent comment_id', () => {
+      test("status: 404 - responds with err msg for non-existent comment_id", () => {
         return request(app)
           .delete("/api/comments/50")
           .expect(404)
-          .then(({body}) => {
-            expect(body.msg).toBe("comment_id not found")
-        })
+          .then(({ body }) => {
+            expect(body.msg).toBe("comment_id not found");
+          });
+      });
+    });
+  });
+  // ----- /api -----
+  describe("/api", () => {
+    describe("GET", () => {
+      test("status: 200 - responds with endpoints JSON", () => {
+        return request(app)
+          .get("/api")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body).toEqual(endpoints);
+          });
       });
     });
   });

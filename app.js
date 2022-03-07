@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const {
   handle500s,
   handlePsqlErrors,
@@ -11,6 +12,8 @@ const { getCommentsByArticleId, postCommentByArticleId, deleteCommentByCommentId
 const { getEndpoints } = require("./controllers/endpoints-controller");
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
